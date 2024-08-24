@@ -2,18 +2,18 @@ JAVAC = javac
 SRC_DIR = src
 BIN_DIR = bin
 
-MAIN_SOURCE = $(SRC_DIR)/main/Main.java
+SOURCES = $(shell find $(SRC_DIR) -name "*.java")
 
-MAIN_CLASS = $(BIN_DIR)/main/Main.class
+CLASSES = $(SOURCES:$(SRC_DIR)/%.java=$(BIN_DIR)/%.class)
 
-all: $(MAIN_CLASS)
+all: $(CLASSES)
 
-$(MAIN_CLASS): $(MAIN_SOURCE)
-	@mkdir -p $(BIN_DIR)/main
-	$(JAVAC) -d $(BIN_DIR) $(MAIN_SOURCE)
+$(BIN_DIR)/%.class: $(SRC_DIR)/%.java
+	@mkdir -p $(dir $@)
+	$(JAVAC) -d $(BIN_DIR) -sourcepath $(SRC_DIR) $<
 
 clean:
-	@rm -rf $(BIN_DIR)
+	@rm -rf $(BIN_DIR)/*
 
 run: all
 	@java -cp $(BIN_DIR) main.Main
